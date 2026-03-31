@@ -1,6 +1,9 @@
 <mvc:View controllerName="com.travel.request.travelrequest.controller.View1"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <Page id="page" title="{i18n>title}">
-    </Page>
+
+    <VBox id="_IDGenVBox" height="100%" width="100%">
+        <!-- Your UI starts here -->
+    </VBox>
+
 </mvc:View>

@@ -1,0 +1,11 @@
+<mvc:View 
+    controllerName="com.travel.request.travelrequest.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <VBox id="_IDGenVBx" height="100%" width="100%">
+        <!-- Your UI starts here -->
+    </VBox>
+
+</mvc:View>
