@@ -74,17 +74,41 @@
       },
       "routes": [
         {
-          "name": "RouteView1",
-          "pattern": ":?query:",
-          "target": [
-            "TargetView1"
-          ]
+          "name": "dashboard",
+          "pattern": "",
+          "target": "dashboard"
+        },
+        {
+          "name": "request",
+          "pattern": "requests",
+          "target": "requests"
+        },
+        {
+          "name": "requestCreate",
+          "pattern": "request/create",
+          "target": "requestCreate"
+        },
+        {
+          "name": "requestDetail",
+          "pattern": "request/{id}",
+          "target": "requestDetail"
+        },
+        {
+          "name": "manager",
+          "pattern": "manager",
+          "target": "manager"
+        },
+        {
+          "name": "finance",
+          "pattern": "finance",
+          "target": "finance"
         }
       ],
       "targets": {
-        "TargetView1": {
-          "id": "View1",
-          "name": "View1"
+        "dashboard": {
+          "viewName": "Dashboard",
+          "viewLabel": 1,
+          "viewId": "1"
         }
       }
     },
