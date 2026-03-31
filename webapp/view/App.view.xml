@@ -1,7 +1,63 @@
 <mvc:View controllerName="com.travel.request.travelrequest.controller.App"
     displayBlock="true"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
-    <App id="app">
-    </App>
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:t="sap.tnt">
+
+    <t:ToolPage id="toolPage">
+
+        <!-- LEFT DRAWER -->
+        <t:sideContent>
+            <t:SideNavigation id="sideNavigation" itemSelect=".onNavItemSelect">
+                <t:NavigationList id="navList">
+                    <t:NavigationListItem
+                        id="navDashboard"
+                        text="Dashboard"
+                        icon="sap-icon://home"
+                        key="dashboard"/>
+                    <t:NavigationListItem
+                        id="navEmployee"
+                        text="Employee View"
+                        icon="sap-icon://employee"
+                        key="employee"/>
+                    <t:NavigationListItem
+                        id="navManager"
+                        text="Manager View"
+                        icon="sap-icon://manager"
+                        key="manager"/>
+                </t:NavigationList>
+            </t:SideNavigation>
+        </t:sideContent>
+
+        <!-- TOP APP BAR -->
+        <t:header>
+            <t:ToolHeader id="toolHeader">
+                <Button
+                    id="menuToggleBtn"
+                    icon="sap-icon://menu2"
+                    press=".onToggleSideNav"
+                    type="Transparent"/>
+                <Title
+                    id="appTitle"
+                    text="Travel Request App"
+                    titleStyle="H4"
+                    class="sapUiSmallMarginBegin"/>
+                <ToolbarSpacer id="toolbarSpacer"/>
+                <Avatar
+                    id="userAvatar"
+                    initials="DU"
+                    displaySize="XS"
+                    backgroundColor="Accent6"/>
+            </t:ToolHeader>
+        </t:header>
+
+        <!-- MAIN CONTENT AREA -->
+        <t:mainContents>
+            <NavContainer id="mainNavContainer">
+            </NavContainer>
+        </t:mainContents>
+
+    </t:ToolPage>
+
 </mvc:View>
