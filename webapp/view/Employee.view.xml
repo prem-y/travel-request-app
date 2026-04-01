@@ -1,0 +1,187 @@
+<mvc:View
+    controllerName="com.travel.request.travelrequest.controller.Employee"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+
+    <f:DynamicPage id="employeePage" toggleHeaderOnTitleClick="false">
+
+        <!-- TITLE -->
+        <f:title>
+            <f:DynamicPageTitle id="employeePageTitle">
+                <f:heading>
+                    <Title id="employeeHeading" text="My Travel Requests" level="H2"/>
+                </f:heading>
+                <f:snappedHeading>
+                    <Title id="employeeSnappedHeading" text="My Travel Requests" level="H3"/>
+                </f:snappedHeading>
+                <f:actions>
+                    <Button
+                        id="btnNewRequest"
+                        text="New Request"
+                        type="Emphasized"
+                        icon="sap-icon://add"
+                        press=".onNewRequest"/>
+                    <Button
+                        id="btnRefresh"
+                        icon="sap-icon://refresh"
+                        type="Transparent"
+                        tooltip="Refresh"
+                        press=".onRefresh"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <!-- FILTER BAR -->
+        <f:header>
+            <f:DynamicPageHeader id="employeePageHeader" pinnable="true">
+                <VBox id="filterBarBox">
+                    <HBox id="filterRow" wrap="Wrap" alignItems="End">
+
+                        <VBox id="filterStatusBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblFilterStatus" text="Status" labelFor="filterStatus"/>
+                            <Select id="filterStatus" change=".onFilterChange" width="180px">
+                                <items>
+                                    <core:Item id="filterAll"      key=""          text="All"/>
+                                    <core:Item id="filterDraft"    key="Draft"     text="Draft"/>
+                                    <core:Item id="filterPending"  key="Pending"   text="Pending Approval"/>
+                                    <core:Item id="filterApproved" key="Approved"  text="Approved"/>
+                                    <core:Item id="filterRejected" key="Rejected"  text="Rejected"/>
+                                </items>
+                            </Select>
+                        </VBox>
+
+                        <VBox id="filterTravelTypeBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblFilterType" text="Travel Type" labelFor="filterTravelType"/>
+                            <Select id="filterTravelType" change=".onFilterChange" width="180px">
+                                <items>
+                                    <core:Item id="typeAll"   key="" text="All"/>
+                                    <core:Item id="typeDom"   key="Domestic"      text="Domestic"/>
+                                    <core:Item id="typeIntl"  key="International" text="International"/>
+                                </items>
+                            </Select>
+                        </VBox>
+
+                        <VBox id="filterSearchBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblSearch" text="Search" labelFor="searchField"/>
+                            <SearchField
+                                id="searchField"
+                                placeholder="Search destination, purpose..."
+                                width="250px"
+                                search=".onSearch"
+                                liveChange=".onSearch"/>
+                        </VBox>
+
+                        <Button
+                            id="btnClearFilters"
+                            text="Clear"
+                            type="Transparent"
+                            icon="sap-icon://clear-filter"
+                            press=".onClearFilters"
+                            class="sapUiSmallMarginTop"/>
+
+                    </HBox>
+                </VBox>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- TABLE -->
+        <f:content>
+            <Table
+                id="requestTable"
+                items="{requestListModel>/requests}"
+                busy="{uiModel>/busy}"
+                busyIndicatorDelay="0"
+                noDataText="No travel requests found."
+                growing="true"
+                growingThreshold="10"
+                growingScrollToLoad="true">
+
+                <headerToolbar>
+                    <OverflowToolbar id="tableToolbar">
+                        <Title id="tableTitle" text="{uiModel>/tableTitle}" level="H4"/>
+                        <ToolbarSpacer id="tableSpacer"/>
+                        <SegmentedButton
+                            id="viewToggle"
+                            selectedKey="table"
+                            selectionChange=".onViewToggle">
+                            <items>
+                                <SegmentedButtonItem id="viewTable" key="table" icon="sap-icon://table-view"/>
+                                <SegmentedButtonItem id="viewList"  key="list"  icon="sap-icon://list"/>
+                            </items>
+                        </SegmentedButton>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="colRequestId" width="10%">
+                        <Text id="hdrRequestId" text="Request ID"/>
+                    </Column>
+                    <Column id="colDestination" width="18%">
+                        <Text id="hdrDestination" text="Destination"/>
+                    </Column>
+                    <Column id="colTravelType" width="12%">
+                        <Text id="hdrTravelType" text="Travel Type"/>
+                    </Column>
+                    <Column id="colDates" width="18%">
+                        <Text id="hdrDates" text="Travel Dates"/>
+                    </Column>
+                    <Column id="colAmount" width="12%" hAlign="End">
+                        <Text id="hdrAmount" text="Est. Amount"/>
+                    </Column>
+                    <Column id="colStatus" width="12%">
+                        <Text id="hdrStatus" text="Status"/>
+                    </Column>
+                    <Column id="colActions" width="18%" hAlign="Center">
+                        <Text id="hdrActions" text="Actions"/>
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem
+                        id="requestRow"
+                        type="Navigation"
+                        press=".onRowPress">
+                        <cells>
+                            <Text id="cellRequestId"   text="{requestListModel>requestId}"/>
+                            <Text id="cellDestination" text="{requestListModel>destination}"/>
+                            <Text id="cellTravelType"  text="{requestListModel>travelType}"/>
+                            <Text id="cellDates"       text="{requestListModel>startDate} - {requestListModel>endDate}"/>
+                            <Text id="cellAmount"      text="₹ {requestListModel>estimatedAmount}"/>
+                            <ObjectStatus
+                                id="cellStatus"
+                                text="{requestListModel>status}"
+                                state="{requestListModel>statusState}"/>
+                            <HBox id="cellActionsBox" justifyContent="Center">
+                                <Button
+                                    id="cellBtnView"
+                                    icon="sap-icon://detail-view"
+                                    type="Transparent"
+                                    tooltip="View"
+                                    press=".onViewRequest"/>
+                                <Button
+                                    id="cellBtnEdit"
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    tooltip="Edit"
+                                    visible="{= ${requestListModel>status} === 'Draft' }"
+                                    press=".onEditRequest"/>
+                                <Button
+                                    id="cellBtnDelete"
+                                    icon="sap-icon://delete"
+                                    type="Transparent"
+                                    tooltip="Delete"
+                                    visible="{= ${requestListModel>status} === 'Draft' }"
+                                    press=".onDeleteRequest"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+
+            </Table>
+        </f:content>
+
+    </f:DynamicPage>
+
+</mvc:View>
