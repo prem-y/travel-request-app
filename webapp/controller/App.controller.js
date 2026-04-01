@@ -8,16 +8,17 @@ sap.ui.define([
     // Define menus per module
     var oModuleMenus = {
         Employee: [
-            { text: "Dashboard",     icon: "sap-icon://home",         key: "dashboard" },
-            { text: "Employee View", icon: "sap-icon://employee",     key: "employee" }
+            { text: "Dashboard", icon: "sap-icon://home", key: "dashboard" },
+            { text: "Create Travel Request", icon: "sap-icon://create", key: "requestCreate" },
+            { text: "View My Requests", icon: "sap-icon://detail-view", key: "employee" }
         ],
         Manager: [
-            { text: "Dashboard",    icon: "sap-icon://home",     key: "dashboard" },
-            { text: "Manager View", icon: "sap-icon://manager",  key: "manager" }
+            { text: "Dashboard", icon: "sap-icon://home", key: "dashboard" },
+            { text: "Approve / Reject", icon: "sap-icon://task", key: "manager" }
         ],
         Finance: [
-            { text: "Dashboard",    icon: "sap-icon://home",         key: "dashboard" },
-            { text: "Finance View", icon: "sap-icon://money-bills",  key: "finance" }
+            { text: "Dashboard", icon: "sap-icon://home", key: "dashboard" },
+            { text: "Finance View", icon: "sap-icon://money-bills", key: "finance" }
         ]
     };
 
