@@ -18,8 +18,8 @@ sap.ui.define([
         ],
         Finance: [
             { text: "Dashboard", icon: "sap-icon://home", key: "dashboard" },
-            { text: "Finance View", icon: "sap-icon://money-bills", key: "finance" }
-        ]
+            { text: "View Approved Requests", icon: "sap-icon://money-bills", key: "finance" }
+        ],
     };
 
     return Controller.extend("com.travel.request.travelrequest.controller.App", {
