@@ -93,6 +93,11 @@
           "name": "requestCreate",
           "pattern": "request/create/:id:",
           "target": "requestCreate"
+        },
+        {
+          "name": "finance",
+          "pattern": "finance",
+          "target": "finance"
         }
       ],
       "targets": {
@@ -111,6 +116,10 @@
         "requestCreate": {
           "viewName": "RequestCreate",
           "viewId": "requestCreate"
+        },
+        "finance": {
+          "viewName": "Finance",
+          "viewId": "finance"
         }
       }
     },
