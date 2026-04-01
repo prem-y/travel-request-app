@@ -38,7 +38,9 @@
       "minUI5Version": "1.146.0",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.ui.core": {},
+        "sap.tnt": {},
+        "sap.f": {}
       }
     },
     "contentDensities": {
@@ -64,11 +66,10 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "controlAggregation": "pages",
-        "controlId": "app",
+        "controlId": "mainNavContainer",
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
-        "path": "com.travel.request.travelrequest.view",
         "async": true,
         "viewPath": "com.travel.request.travelrequest.view"
       },
@@ -79,36 +80,28 @@
           "target": "dashboard"
         },
         {
-          "name": "request",
-          "pattern": "requests",
-          "target": "requests"
-        },
-        {
-          "name": "requestCreate",
-          "pattern": "request/create",
-          "target": "requestCreate"
-        },
-        {
-          "name": "requestDetail",
-          "pattern": "request/{id}",
-          "target": "requestDetail"
+          "name": "employee",
+          "pattern": "employee",
+          "target": "employee"
         },
         {
           "name": "manager",
           "pattern": "manager",
           "target": "manager"
-        },
-        {
-          "name": "finance",
-          "pattern": "finance",
-          "target": "finance"
         }
       ],
       "targets": {
         "dashboard": {
           "viewName": "Dashboard",
-          "viewLabel": 1,
-          "viewId": "1"
+          "viewId": "dashboard"
+        },
+        "employee": {
+          "viewName": "Employee",
+          "viewId": "employee"
+        },
+        "manager": {
+          "viewName": "Manager",
+          "viewId": "manager"
         }
       }
     },
