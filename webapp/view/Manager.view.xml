@@ -1,0 +1,152 @@
+<mvc:View
+    controllerName="com.travel.request.travelrequest.controller.Manager"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+
+    <f:DynamicPage id="managerPage" toggleHeaderOnTitleClick="false">
+
+        <!-- TITLE -->
+        <f:title>
+            <f:DynamicPageTitle id="managerPageTitle">
+                <f:heading>
+                    <Title id="managerHeading" text="Pending Approvals" level="H2"/>
+                </f:heading>
+                <f:snappedHeading>
+                    <Title id="managerSnappedHeading" text="Pending Approvals" level="H3"/>
+                </f:snappedHeading>
+                <f:actions>
+                    <Button
+                        id="btnBulkApprove"
+                        text="Approve Selected"
+                        type="Success"
+                        icon="sap-icon://accept"
+                        press=".onBulkApprove"
+                        enabled="{uiModel>/bulkEnabled}"/>
+                    <Button
+                        id="btnBulkReject"
+                        text="Reject Selected"
+                        type="Reject"
+                        icon="sap-icon://decline"
+                        press=".onBulkReject"
+                        enabled="{uiModel>/bulkEnabled}"/>
+                    <Button
+                        id="btnRefreshManager"
+                        icon="sap-icon://refresh"
+                        type="Transparent"
+                        tooltip="Refresh"
+                        press=".onRefresh"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <!-- FILTER HEADER -->
+        <f:header>
+            <f:DynamicPageHeader id="managerPageHeader" pinnable="true">
+                <HBox id="managerFilterRow" wrap="Wrap" alignItems="End">
+
+                    <VBox id="mFilterTypeBox" class="sapUiSmallMarginEnd">
+                        <Label id="lblMFilterType" text="Travel Type" labelFor="mFilterType"/>
+                        <Select id="mFilterType" change=".onFilterChange" width="180px">
+                            <items>
+                                <core:Item id="mTypeAll"  key=""              text="All"/>
+                                <core:Item id="mTypeDom"  key="Domestic"      text="Domestic"/>
+                                <core:Item id="mTypeIntl" key="International" text="International"/>
+                            </items>
+                        </Select>
+                    </VBox>
+
+                    <VBox id="mFilterSearchBox" class="sapUiSmallMarginEnd">
+                        <Label id="lblMSearch" text="Search" labelFor="mSearchField"/>
+                        <SearchField
+                            id="mSearchField"
+                            placeholder="Search employee, destination..."
+                            width="250px"
+                            liveChange=".onSearch"/>
+                    </VBox>
+
+                    <Button
+                        id="btnMClearFilters"
+                        text="Clear"
+                        type="Transparent"
+                        icon="sap-icon://clear-filter"
+                        press=".onClearFilters"
+                        class="sapUiSmallMarginTop"/>
+
+                </HBox>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- TABLE -->
+        <f:content>
+            <Table
+                id="pendingTable"
+                items="{managerModel>/requests}"
+                busy="{uiModel>/busy}"
+                busyIndicatorDelay="0"
+                noDataText="No pending requests."
+                mode="MultiSelect"
+                selectionChange=".onSelectionChange"
+                growing="true"
+                growingThreshold="10">
+
+                <headerToolbar>
+                    <OverflowToolbar id="managerTableToolbar">
+                        <Title id="managerTableTitle" text="{uiModel>/tableTitle}" level="H4"/>
+                        <ToolbarSpacer id="managerTableSpacer"/>
+                        <Text id="selectionInfo" text="{uiModel>/selectionText}" class="sapUiSmallMarginEnd"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="mColReqId"      width="10%"><Text id="mHdrReqId"      text="Request ID"/></Column>
+                    <Column id="mColEmployee"   width="14%"><Text id="mHdrEmployee"   text="Employee"/></Column>
+                    <Column id="mColDest"       width="14%"><Text id="mHdrDest"       text="Destination"/></Column>
+                    <Column id="mColType"       width="10%"><Text id="mHdrType"       text="Travel Type"/></Column>
+                    <Column id="mColDates"      width="16%"><Text id="mHdrDates"      text="Travel Dates"/></Column>
+                    <Column id="mColAmount"     width="10%" hAlign="End"><Text id="mHdrAmount" text="Est. Amount"/></Column>
+                    <Column id="mColPurpose"    width="14%"><Text id="mHdrPurpose"    text="Purpose"/></Column>
+                    <Column id="mColActions"    width="12%" hAlign="Center"><Text id="mHdrActions" text="Actions"/></Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem id="managerRow" type="Active">
+                        <cells>
+                            <Text id="mCellReqId"    text="{managerModel>requestId}"/>
+                            <Text id="mCellEmployee" text="{managerModel>employeeId}"/>
+                            <Text id="mCellDest"     text="{managerModel>destination}"/>
+                            <Text id="mCellType"     text="{managerModel>travelType}"/>
+                            <Text id="mCellDates"    text="{managerModel>startDate} - {managerModel>endDate}"/>
+                            <Text id="mCellAmount"   text="₹ {managerModel>estimatedAmount}"/>
+                            <Text id="mCellPurpose"  text="{managerModel>purpose}"/>
+                            <HBox id="mCellActions" justifyContent="Center">
+                                <Button
+                                    id="mBtnApprove"
+                                    icon="sap-icon://accept"
+                                    type="Success"
+                                    tooltip="Approve"
+                                    press=".onApprove"/>
+                                <Button
+                                    id="mBtnReject"
+                                    icon="sap-icon://decline"
+                                    type="Reject"
+                                    tooltip="Reject"
+                                    press=".onReject"/>
+                                <Button
+                                    id="mBtnView"
+                                    icon="sap-icon://detail-view"
+                                    type="Transparent"
+                                    tooltip="View Details"
+                                    press=".onViewDetails"/>
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+
+            </Table>
+        </f:content>
+
+    </f:DynamicPage>
+
+</mvc:View>
