@@ -1,0 +1,173 @@
+<mvc:View
+    controllerName="com.travel.request.travelrequest.controller.RequestCreate"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:l="sap.ui.layout.form"
+    xmlns:core="sap.ui.core">
+
+    <f:DynamicPage id="requestCreatePage" toggleHeaderOnTitleClick="false" busy="{uiModel>/busy}" busyIndicatorDelay="0">
+
+        <!-- HEADER TITLE -->
+        <f:title>
+            <f:DynamicPageTitle id="requestCreatePageTitle">
+                <f:heading>
+                    <Title id="requestCreateHeading" text="Create Travel Request" level="H2"/>
+                </f:heading>
+                <f:snappedHeading>
+                    <Title id="requestCreateSnappedHeading" text="Create Travel Request" level="H3"/>
+                </f:snappedHeading>
+                <f:actions>
+                    <Button id="btnSubmit"
+                        text="Submit"
+                        type="Emphasized"
+                        icon="sap-icon://paper-plane"
+                        press=".onSubmit"
+                        enabled="{uiModel>/submitEnabled}"/>
+                    <Button id="btnSaveDraft"
+                        text="Save as Draft"
+                        type="Default"
+                        icon="sap-icon://save"
+                        press=".onSaveDraft"/>
+                    <Button id="btnCancel"
+                        text="Cancel"
+                        type="Transparent"
+                        icon="sap-icon://decline"
+                        press=".onCancel"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <!-- HEADER INFO BAR -->
+        <f:header>
+            <f:DynamicPageHeader id="requestCreateHeader" pinnable="true">
+                <HBox id="headerInfoBox" wrap="Wrap">
+                    <VBox id="empInfoBox" class="sapUiSmallMarginEnd">
+                        <Label id="lblEmpId" text="Employee ID" design="Bold"/>
+                        <Text id="txtEmpId" text="{requestModel>/employeeId}"/>
+                    </VBox>
+                    <VBox id="statusBox" class="sapUiSmallMarginEnd">
+                        <Label id="lblStatus" text="Status" design="Bold"/>
+                        <ObjectStatus
+                            id="requestStatus"
+                            text="{requestModel>/status}"
+                            state="{requestModel>/statusState}"/>
+                    </VBox>
+                    <VBox id="createdBox">
+                        <Label id="lblCreatedOn" text="Created On" design="Bold"/>
+                        <Text id="txtCreatedOn" text="{requestModel>/createdOn}"/>
+                    </VBox>
+                </HBox>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- CONTENT -->
+        <f:content>
+            <VBox id="formContainer" class="sapUiMediumMargin">
+
+
+                <!-- SECTION: Travel Details -->
+                <Panel id="panelTravelDetails" headerText="Travel Details" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <l:Form id="travelDetailsForm" editable="true">
+                        <l:layout>
+                            <l:ColumnLayout id="_IDGenColumnLayout1" columnsM="2" columnsL="2" columnsXL="3"/>
+                        </l:layout>
+                        <l:FormContainer id="fcTravelDetails">
+
+                            <l:FormElement id="fiTravelType" label="Travel Type">
+                                <Select id="selTravelType"
+                                    selectedKey="{requestModel>/travelType}"
+                                    change=".onTravelTypeChange"
+                                    width="100%">
+                                    <items>
+                                        <core:Item id="itemDomestic" key="Domestic" text="Domestic"/>
+                                        <core:Item id="itemIntl" key="International" text="International"/>
+                                    </items>
+                                </Select>
+                            </l:FormElement>
+
+                            <l:FormElement id="fiStartDate" label="Start Date *">
+                                <DatePicker
+                                    id="dpStartDate"
+                                    value="{requestModel>/startDate}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd MMM yyyy"
+                                    change=".onDateChange"
+                                    valueState="{uiModel>/startDateState}"
+                                    valueStateText="Start date is required"/>
+                            </l:FormElement>
+
+                            <l:FormElement id="fiEndDate" label="End Date *">
+                                <DatePicker
+                                    id="dpEndDate"
+                                    value="{requestModel>/endDate}"
+                                    valueFormat="yyyy-MM-dd"
+                                    displayFormat="dd MMM yyyy"
+                                    change=".onDateChange"
+                                    valueState="{uiModel>/endDateState}"
+                                    valueStateText="End date must be after start date"/>
+                            </l:FormElement>
+
+                            <l:FormElement id="fiDestination" label="Destination *">
+                                <Input
+                                    id="inpDestination"
+                                    value="{requestModel>/destination}"
+                                    placeholder="Enter destination city / country"
+                                    liveChange=".onFieldChange"
+                                    valueState="{uiModel>/destinationState}"
+                                    valueStateText="Destination is required"/>
+                            </l:FormElement>
+
+                            <l:FormElement id="fiAmount" label="Estimated Amount (INR)">
+                                <Input
+                                    id="inpAmount"
+                                    value="{requestModel>/estimatedAmount}"
+                                    placeholder="0.00"
+                                    type="Number"
+                                    liveChange=".onFieldChange"/>
+                            </l:FormElement>
+
+                        </l:FormContainer>
+                    </l:Form>
+                </Panel>
+
+                <!-- SECTION: Purpose -->
+                <Panel id="panelPurpose" headerText="Purpose of Travel" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+                    <l:Form id="purposeForm" editable="true">
+                        <l:layout>
+                            <l:ResponsiveGridLayout id="_IDGenResponsiveGridLayout"
+                                labelSpanXL="2"
+                                labelSpanL="2"
+                                labelSpanM="2"
+                                labelSpanS="12"
+                                emptySpanXL="0"
+                                emptySpanL="0"
+                                emptySpanM="0"
+                                columnsXL="1"
+                                columnsL="1"
+                                columnsM="1"/>
+                        </l:layout>
+                        <l:FormContainer id="fcPurpose">
+                            <l:FormElement id="fiPurpose" label="Purpose *">
+                                <TextArea
+                                    id="txaPurpose"
+                                    value="{requestModel>/purpose}"
+                                    placeholder="Describe the purpose of this travel request..."
+                                    rows="4"
+                                    growing="true"
+                                    maxLength="500"
+                                    liveChange=".onFieldChange"
+                                    valueState="{uiModel>/purposeState}"
+                                    valueStateText="Purpose is mandatory"
+                                    width="100%"/>
+                            </l:FormElement>
+                        </l:FormContainer>
+                    </l:Form>
+                </Panel>
+
+            </VBox>
+        </f:content>
+
+    </f:DynamicPage>
+
+</mvc:View>
