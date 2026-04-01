@@ -4,8 +4,91 @@
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
 >
-    <VBox id="_IDGenVBx" height="100%" width="100%">
-        <!-- Your UI starts here -->
+    <VBox id="dashboardRoot" height="100%" width="100%" class="sapUiMediumMargin">
+
+        <!-- Page Title -->
+        <Title id="dashboardTitle" text="Dashboard" titleStyle="H2" class="sapUiMediumMarginBottom"/>
+
+        <!-- KPI Tiles -->
+        <FlexBox id="kpiTilesBox" wrap="Wrap" alignItems="Start">
+
+            <!-- Total Requests -->
+            <GenericTile id="tileTotalRequests"
+                header="Total Requests"
+                subheader="All submitted requests"
+                frameType="OneByOne"
+                class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <tileContent>
+                    <TileContent id="tcTotal">
+                        <content>
+                            <NumericContent id="ncTotal"
+                                value="124"
+                                icon="sap-icon://travel-request"
+                                valueColor="Neutral"
+                                scale=""/>
+                        </content>
+                    </TileContent>
+                </tileContent>
+            </GenericTile>
+
+            <!-- Pending Approval -->
+            <GenericTile id="tilePending"
+                header="Pending Approval"
+                subheader="Awaiting manager review"
+                frameType="OneByOne"
+                class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <tileContent>
+                    <TileContent id="tcPending">
+                        <content>
+                            <NumericContent id="ncPending"
+                                value="38"
+                                icon="sap-icon://pending"
+                                valueColor="Critical"
+                                scale=""/>
+                        </content>
+                    </TileContent>
+                </tileContent>
+            </GenericTile>
+
+            <!-- Approved -->
+            <GenericTile id="tileApproved"
+                header="Approved"
+                subheader="Successfully approved"
+                frameType="OneByOne"
+                class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <tileContent>
+                    <TileContent id="tcApproved">
+                        <content>
+                            <NumericContent id="ncApproved"
+                                value="72"
+                                icon="sap-icon://accept"
+                                valueColor="Good"
+                                scale=""/>
+                        </content>
+                    </TileContent>
+                </tileContent>
+            </GenericTile>
+
+            <!-- Rejected -->
+            <GenericTile id="tileRejected"
+                header="Rejected"
+                subheader="Declined requests"
+                frameType="OneByOne"
+                class="sapUiSmallMarginEnd sapUiSmallMarginBottom">
+                <tileContent>
+                    <TileContent id="tcRejected">
+                        <content>
+                            <NumericContent id="ncRejected"
+                                value="14"
+                                icon="sap-icon://decline"
+                                valueColor="Error"
+                                scale=""/>
+                        </content>
+                    </TileContent>
+                </tileContent>
+            </GenericTile>
+
+        </FlexBox>
     </VBox>
 
 </mvc:View>
