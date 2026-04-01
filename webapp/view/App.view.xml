@@ -17,17 +17,18 @@
                         icon="sap-icon://home"
                         key="dashboard"/>
                     <t:NavigationListItem
-                        id="navEmployee"
+                        id="navItem2"
                         text="Employee View"
                         icon="sap-icon://employee"
                         key="employee"/>
                     <t:NavigationListItem
-                        id="navManager"
+                        id="navItem3"
                         text="Manager View"
                         icon="sap-icon://manager"
-                        key="manager"/>
+                        key="manager"
+                        visible="false"/>
                     <t:NavigationListItem
-                        id="navFinance"
+                        id="navItem4"
                         text="Finance View"
                         icon="sap-icon://money-bills"
                         key="finance"
