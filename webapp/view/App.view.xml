@@ -63,7 +63,7 @@
                     press=".onModuleSwitchPress"/>
                 <Avatar
                     id="userAvatar"
-                    initials="DU"
+                    initials="{session>/initials}"
                     displaySize="XS"
                     backgroundColor="Accent6"/>
             </t:ToolHeader>

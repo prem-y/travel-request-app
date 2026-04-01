@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/UIComponent",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "com/travel/request/travelrequest/model/models"
-], function (UIComponent, JSONModel, MessageBox, models) {
+    "com/travel/request/travelrequest/model/models",
+    "com/travel/request/travelrequest/model/Session"
+], function (UIComponent, JSONModel, MessageBox, models, Session) {
     "use strict";
 
     return UIComponent.extend("com.travel.request.travelrequest.Component", {
@@ -15,6 +16,8 @@ sap.ui.define([
         init: function () {
             UIComponent.prototype.init.apply(this, arguments);
             this.setModel(models.createDeviceModel(), "device");
+            // Session model — available globally across all views
+            this.setModel(Session.createSessionModel(), "session");
             this._initSharedModel();
             this._registerGlobalErrorHandlers();
             this.getRouter().initialize();
@@ -104,7 +107,7 @@ sap.ui.define([
             // Parse errors (wrong data type bound to field)
             sap.ui.getCore().attachParseError(function (oEvent) {
                 var sElement = oEvent.getParameter("element").getId() || "field";
-                var sMsg     = oResourceBundle.getText("errParseError", [sElement]);
+                var sMsg = oResourceBundle.getText("errParseError", [sElement]);
                 MessageBox.error(sMsg, { title: "Input Error" });
             });
 
