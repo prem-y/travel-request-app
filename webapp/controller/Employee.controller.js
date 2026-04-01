@@ -6,7 +6,8 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/m/MessageToast",
     "com/travel/request/travelrequest/model/formatter",
-], function (Controller, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, formatter) {
+    "com/travel/request/travelrequest/model/Utils"
+], function (Controller, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, formatter, Utils) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Employee", {
@@ -45,18 +46,18 @@ sap.ui.define([
         _loadRequests: function () {
             var oUiModel = this.getView().getModel("uiModel");
             var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
+            var sEmpId = this.getOwnerComponent().getModel("session").getProperty("/employeeId");
 
-            oUiModel.setProperty("/busy", true);
+            Utils.setBusy(this.getView(), true);
 
             setTimeout(function () {
-                var aRequests = oSharedModel.getProperty("/requests") || [];
-                // Show only this employee's requests
-                var aMyRequests = aRequests.filter(function (r) {
-                    return r.employeeId === "EMP-00123";
+                var aAll = oSharedModel.getProperty("/requests") || [];
+                var aMyRequests = aAll.filter(function (r) {
+                    return r.employeeId === sEmpId;
                 });
 
                 this.getView().getModel("requestListModel").setProperty("/requests", aMyRequests);
-                oUiModel.setProperty("/busy", false);
+                Utils.setBusy(this.getView(), false);
                 this._updateTableTitle(aMyRequests.length);
 
             }.bind(this), 400);
@@ -176,20 +177,14 @@ sap.ui.define([
         // ── ERROR HANDLING ─────────────────────────────────────────────────────
 
         _handleError: function (oError) {
-            var sMessage = "Failed to load requests.";
-            if (oError && oError.message) sMessage = oError.message;
-            MessageBox.error(sMessage, {
-                title: "Error",
-                details: oError ? JSON.stringify(oError, null, 2) : ""
-            });
+            Utils.handleError(oError, this.getView());
         },
 
         // ── HELPERS ────────────────────────────────────────────────────────────
 
         _updateTableTitle: function (iCount) {
-            this.getView().getModel("uiModel")
-                .setProperty("/tableTitle", "My Requests (" + iCount + ")");
-        }
+            Utils.updateTableTitle(this.getView(), "uiModel", "/tableTitle", "My Requests", iCount);
+        },
 
     });
 });

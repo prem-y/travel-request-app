@@ -3,7 +3,8 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
     "com/travel/request/travelrequest/model/formatter",
-], function (Controller, JSONModel, MessageToast, formatter) {
+    "com/travel/request/travelrequest/model/Utils"
+], function (Controller, JSONModel, MessageToast, formatter, Utils) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Finance", {
@@ -113,19 +114,15 @@ sap.ui.define([
         // ── HELPERS ────────────────────────────────────────────────────────────
 
         _updateSummary: function (aList) {
-            var oUiModel = this.getView().getModel("uiModel");
             var iCount = aList.length;
-
             var fTotal = aList.reduce(function (sum, r) {
-                return sum + parseFloat((r.estimatedAmount + "").replace(/,/g, "") || 0);
+                return sum + Utils.parseAmount(r.estimatedAmount);
             }, 0);
-
-            var sTotalFormatted = fTotal.toLocaleString("en-IN");
-
-            oUiModel.setProperty("/tableTitle", "Approved Requests (" + iCount + ")");
+            var oUiModel = this.getView().getModel("uiModel");
+            Utils.updateTableTitle(this.getView(), "uiModel", "/tableTitle", "Approved Requests", iCount);
             oUiModel.setProperty("/totalText", "Total: " + iCount + " request(s)");
-            oUiModel.setProperty("/amountText", "Total Est. Amount: ₹ " + sTotalFormatted);
-        }
+            oUiModel.setProperty("/amountText", "Total Est. Amount: " + Utils.formatINR(fTotal));
+        },
 
     });
 });

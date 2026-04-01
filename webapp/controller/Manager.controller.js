@@ -12,8 +12,9 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text",
     "com/travel/request/travelrequest/model/formatter",
+    "com/travel/request/travelrequest/model/Utils"
 ], function (Controller, JSONModel, Filter, FilterOperator,
-    MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text, formatter) {
+    MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text, formatter, Utils) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Manager", {
@@ -267,8 +268,7 @@ sap.ui.define([
         // ── HELPERS ────────────────────────────────────────────────────────────
 
         _updateTitle: function (iCount) {
-            this.getView().getModel("uiModel")
-                .setProperty("/tableTitle", "Pending Requests (" + iCount + ")");
+            Utils.updateTableTitle(this.getView(), "uiModel", "/tableTitle", "Pending Requests", iCount);
         }
 
     });
