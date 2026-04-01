@@ -122,9 +122,11 @@
                                 <Input
                                     id="inpAmount"
                                     value="{requestModel>/estimatedAmount}"
-                                    placeholder="0.00"
+                                    placeholder="{i18n>phAmount}"
                                     type="Number"
-                                    liveChange=".onFieldChange"/>
+                                    liveChange=".onFieldChange"
+                                    valueState="{uiModel>/amountState}"
+                                    valueStateText="{uiModel>/amountStateText}"/>
                             </l:FormElement>
 
                         </l:FormContainer>

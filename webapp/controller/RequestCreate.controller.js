@@ -2,8 +2,9 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/travel/request/travelrequest/model/Utils"
+], function (Controller, JSONModel, MessageBox, MessageToast, Utils) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.RequestCreate", {
@@ -53,7 +54,7 @@ sap.ui.define([
 
             // 1. Request Model (JSON) — holds form field values (two-way binding)
             var oRequestModel = new JSONModel({
-                employeeId: "EMP-00123",   // auto-populated
+                employeeId: this.getOwnerComponent().getModel("session").getProperty("/employeeId"),
                 travelType: "Domestic",
                 startDate: "",
                 endDate: "",
@@ -62,7 +63,9 @@ sap.ui.define([
                 purpose: "",
                 status: "Draft",
                 statusState: "None",
-                createdOn: this._today()
+                createdOn: this._today(),
+                amountState: "None",
+                amountStateText: ""
             });
             oRequestModel.setDefaultBindingMode("TwoWay");
             this.getView().setModel(oRequestModel, "requestModel");
@@ -212,7 +215,7 @@ sap.ui.define([
                     } else {
                         // CREATE new request
                         var oNewRequest = {
-                            requestId: "TR-00" + (aRequests.length + 1).toString().padStart(2, "0"),
+                            requestId: Utils.generateRequestId(aRequests),
                             employeeId: oData.employeeId,   // ADD THIS
                             destination: oData.destination,
                             travelType: oData.travelType,
@@ -289,6 +292,27 @@ sap.ui.define([
                 bValid = false;
             }
 
+            // Amount validation
+            var sAmount = oData.estimatedAmount;
+            if (sAmount !== "" && sAmount !== undefined) {
+                var fAmount = parseFloat((sAmount + "").replace(/,/g, ""));
+                if (isNaN(fAmount)) {
+                    oUiModel.setProperty("/amountState", "Error");
+                    oUiModel.setProperty("/amountStateText", "Amount must be a valid number");
+                    bValid = false;
+                } else if (fAmount <= 0) {
+                    oUiModel.setProperty("/amountState", "Error");
+                    oUiModel.setProperty("/amountStateText", "Amount must be greater than 0");
+                    bValid = false;
+                } else if (fAmount > 9999999) {
+                    oUiModel.setProperty("/amountState", "Error");
+                    oUiModel.setProperty("/amountStateText", "Amount cannot exceed ₹ 99,99,999");
+                    bValid = false;
+                } else {
+                    oUiModel.setProperty("/amountState", "None");
+                }
+            }
+
             // Dates
             if (!this._validateDates()) bValid = false;
 
@@ -329,6 +353,8 @@ sap.ui.define([
             oUiModel.setProperty("/endDateState", "None");
             oUiModel.setProperty("/destinationState", "None");
             oUiModel.setProperty("/purposeState", "None");
+            oUiModel.setProperty("/amountState", "None");
+            oUiModel.setProperty("/amountStateText", "");
         },
 
         // ── HELPERS ────────────────────────────────────────────────────────────
