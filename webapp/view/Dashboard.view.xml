@@ -1,15 +1,13 @@
-<mvc:View 
+<mvc:View
     controllerName="com.travel.request.travelrequest.controller.Dashboard"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
-    xmlns:core="sap.ui.core"
->
-    <VBox id="dashboardRoot" height="100%" width="100%" class="sapUiMediumMargin">
+    xmlns:core="sap.ui.core">
 
-        <!-- Page Title -->
+    <VBox id="dashboardRoot" class="sapUiMediumMargin">
+
         <Title id="dashboardTitle" text="Dashboard" titleStyle="H2" class="sapUiMediumMarginBottom"/>
 
-        <!-- KPI Tiles -->
         <FlexBox id="kpiTilesBox" wrap="Wrap" alignItems="Start">
 
             <!-- Total Requests -->
@@ -21,11 +19,11 @@
                 <tileContent>
                     <TileContent id="tcTotal">
                         <content>
-                            <NumericContent id="ncTotal"
-                                value="124"
+                            <NumericContent
+                                id="ncTotal"
+                                value="{kpiModel>/total}"
                                 icon="sap-icon://travel-request"
-                                valueColor="Neutral"
-                                scale=""/>
+                                valueColor="Neutral"/>
                         </content>
                     </TileContent>
                 </tileContent>
@@ -40,11 +38,11 @@
                 <tileContent>
                     <TileContent id="tcPending">
                         <content>
-                            <NumericContent id="ncPending"
-                                value="38"
+                            <NumericContent
+                                id="ncPending"
+                                value="{kpiModel>/pending}"
                                 icon="sap-icon://pending"
-                                valueColor="Critical"
-                                scale=""/>
+                                valueColor="Critical"/>
                         </content>
                     </TileContent>
                 </tileContent>
@@ -59,11 +57,11 @@
                 <tileContent>
                     <TileContent id="tcApproved">
                         <content>
-                            <NumericContent id="ncApproved"
-                                value="72"
+                            <NumericContent
+                                id="ncApproved"
+                                value="{kpiModel>/approved}"
                                 icon="sap-icon://accept"
-                                valueColor="Good"
-                                scale=""/>
+                                valueColor="Good"/>
                         </content>
                     </TileContent>
                 </tileContent>
@@ -78,11 +76,11 @@
                 <tileContent>
                     <TileContent id="tcRejected">
                         <content>
-                            <NumericContent id="ncRejected"
-                                value="14"
+                            <NumericContent
+                                id="ncRejected"
+                                value="{kpiModel>/rejected}"
                                 icon="sap-icon://decline"
-                                valueColor="Error"
-                                scale=""/>
+                                valueColor="Error"/>
                         </content>
                     </TileContent>
                 </tileContent>
