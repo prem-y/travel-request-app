@@ -10,13 +10,14 @@ sap.ui.define([
     "sap/m/TextArea",
     "sap/m/VBox",
     "sap/m/Label",
-    "sap/m/Text"
+    "sap/m/Text",
+    "com/travel/request/travelrequest/model/formatter",
 ], function (Controller, JSONModel, Filter, FilterOperator,
-    MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text) {
+    MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text, formatter) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Manager", {
-
+        formatter: formatter,
         // ── LIFECYCLE ──────────────────────────────────────────────────────────
 
         onInit: function () {
@@ -145,56 +146,45 @@ sap.ui.define([
 
         _openRemarksDialog: function (sAction, aItems) {
             var that = this;
-            var sColor = sAction === "Approve" ? "Accept" : "Reject";
             var sIds = aItems.map(function (i) { return i.requestId; }).join(", ");
 
-            // Destroy previous dialog if exists
-            if (this._oRemarksDialog) {
-                this._oRemarksDialog.destroy();
+            // Set remarks model
+            var oRemarksModel = new JSONModel({
+                title: sAction + " Request(s)",
+                state: sAction === "Approve" ? "Success" : "Error",
+                actionLabel: sAction,
+                buttonType: sAction === "Approve" ? "Accept" : "Reject",
+                requestIds: sIds,
+                remarks: "",
+                action: sAction,
+                items: aItems
+            });
+            this.getView().setModel(oRemarksModel, "remarksModel");
+
+            // Load fragment
+            if (!this._oRemarksDialog) {
+                this._oRemarksDialog = this.loadFragment({
+                    name: "com.travel.request.travelrequest.fragment.RemarksDialog"
+                });
             }
 
-            var oTextArea = new TextArea("remarksInput", {
-                placeholder: "Enter remarks (optional)...",
-                rows: 4,
-                width: "100%"
+            this._oRemarksDialog.then(function (oDialog) {
+                that._oDialog = oDialog;
+                oDialog.open();
             });
+        },
 
-            this._oRemarksDialog = new Dialog({
-                id: "remarksDialog",
-                title: sAction + " Request(s)",
-                type: "Message",
-                state: sAction === "Approve" ? "Success" : "Error",
-                content: [
-                    new VBox({
-                        items: [
-                            new Label({ text: "Request ID(s): " + sIds, design: "Bold" }),
-                            new Text({ text: " ", wrapping: false }),
-                            new Label({ text: "Remarks" }),
-                            oTextArea
-                        ]
-                    })
-                ],
-                beginButton: new Button({
-                    text: sAction,
-                    type: sColor,
-                    press: function () {
-                        var sRemarks = oTextArea.getValue();
-                        that._processAction(sAction, aItems, sRemarks);
-                        that._oRemarksDialog.close();
-                    }
-                }),
-                endButton: new Button({
-                    text: "Cancel",
-                    press: function () { that._oRemarksDialog.close(); }
-                }),
-                afterClose: function () {
-                    that._oRemarksDialog.destroy();
-                    that._oRemarksDialog = null;
-                }
-            });
+        onRemarksConfirm: function () {
+            var oRemarksModel = this.getView().getModel("remarksModel");
+            var sAction = oRemarksModel.getProperty("/action");
+            var aItems = oRemarksModel.getProperty("/items");
+            var sRemarks = oRemarksModel.getProperty("/remarks");
+            this._oDialog.close();
+            this._processAction(sAction, aItems, sRemarks);
+        },
 
-            this.getView().addDependent(this._oRemarksDialog);
-            this._oRemarksDialog.open();
+        onRemarksCancel: function () {
+            this._oDialog.close();
         },
 
         // ── PROCESS ACTION ─────────────────────────────────────────────────────

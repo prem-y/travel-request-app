@@ -1,5 +1,6 @@
 <mvc:View
     controllerName="com.travel.request.travelrequest.controller.Employee"
+    xmlns:formatter="com.travel.request.travelrequest.model.formatter"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
@@ -151,8 +152,10 @@
                             <Text id="cellAmount"      text="₹ {requestListModel>estimatedAmount}"/>
                             <ObjectStatus
                                 id="cellStatus"
-                                text="{requestListModel>status}"
-                                state="{requestListModel>statusState}"/>
+                                text="{path: 'requestListModel>status', 
+                                formatter: '.formatter.statusText'}"
+                                state="{path: 'requestListModel>status', 
+                                formatter: '.formatter.statusState'}"/>
                             <HBox id="cellActionsBox" justifyContent="Center">
                                 <Button
                                     id="cellBtnView"

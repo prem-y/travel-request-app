@@ -4,11 +4,13 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, Filter, FilterOperator, MessageBox, MessageToast) {
+    "sap/m/MessageToast",
+    "com/travel/request/travelrequest/model/formatter",
+], function (Controller, JSONModel, Filter, FilterOperator, MessageBox, MessageToast, formatter) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Employee", {
+        formatter: formatter,
 
         // ── LIFECYCLE ──────────────────────────────────────────────────────────
 

@@ -1,12 +1,13 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
-    "sap/m/MessageToast"
-], function (Controller, JSONModel, MessageToast) {
+    "sap/m/MessageToast",
+    "com/travel/request/travelrequest/model/formatter",
+], function (Controller, JSONModel, MessageToast, formatter) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Finance", {
-
+        formatter: formatter,
         // ── LIFECYCLE ──────────────────────────────────────────────────────────
 
         onInit: function () {
