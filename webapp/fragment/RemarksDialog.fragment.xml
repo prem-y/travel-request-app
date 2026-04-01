@@ -1,0 +1,51 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        id="remarksDialog"
+        title="{remarksModel>/title}"
+        type="Message"
+        state="{remarksModel>/state}">
+
+        <content>
+            <VBox id="remarksDialogBox" class="sapUiSmallMargin">
+                <Label
+                    id="remarksRequestLabel"
+                    text="{i18n>remarksRequestIds}"
+                    design="Bold"
+                    class="sapUiSmallMarginBottom"/>
+                <Text
+                    id="remarksRequestIds"
+                    text="{remarksModel>/requestIds}"
+                    class="sapUiSmallMarginBottom"/>
+                <Label
+                    id="remarksLabel"
+                    text="{i18n>remarksLabel}"
+                    labelFor="remarksInput"/>
+                <TextArea
+                    id="remarksInput"
+                    value="{remarksModel>/remarks}"
+                    placeholder="{i18n>remarksPlaceholder}"
+                    rows="4"
+                    width="100%"/>
+            </VBox>
+        </content>
+
+        <beginButton>
+            <Button
+                id="remarksConfirmBtn"
+                text="{remarksModel>/actionLabel}"
+                type="{remarksModel>/buttonType}"
+                press=".onRemarksConfirm"/>
+        </beginButton>
+        <endButton>
+            <Button
+                id="remarksCancelBtn"
+                text="{i18n>btnCancel}"
+                press=".onRemarksCancel"/>
+        </endButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>
