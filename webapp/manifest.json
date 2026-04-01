@@ -88,6 +88,11 @@
           "name": "manager",
           "pattern": "manager",
           "target": "manager"
+        },
+        {
+          "name": "requestCreate",
+          "pattern": "request/create/:id:",
+          "target": "requestCreate"
         }
       ],
       "targets": {
@@ -102,6 +107,10 @@
         "manager": {
           "viewName": "Manager",
           "viewId": "manager"
+        },
+        "requestCreate": {
+          "viewName": "RequestCreate",
+          "viewId": "requestCreate"
         }
       }
     },
