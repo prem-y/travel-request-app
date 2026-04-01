@@ -26,6 +26,12 @@
                         text="Manager View"
                         icon="sap-icon://manager"
                         key="manager"/>
+                    <t:NavigationListItem
+                        id="navFinance"
+                        text="Finance View"
+                        icon="sap-icon://money-bills"
+                        key="finance"
+                        visible="false"/>
                 </t:NavigationList>
             </t:SideNavigation>
         </t:sideContent>
@@ -43,7 +49,17 @@
                     text="Travel Request App"
                     titleStyle="H4"
                     class="sapUiSmallMarginBegin"/>
+                <Text
+                    id="moduleLabel"
+                    text=""
+                    class="sapUiSmallMarginBegin sapThemeHighlight-asColor"/>
                 <ToolbarSpacer id="toolbarSpacer"/>
+                <Button
+                    id="moduleSwitchBtn"
+                    icon="sap-icon://grid"
+                    type="Transparent"
+                    tooltip="Switch Module"
+                    press=".onModuleSwitchPress"/>
                 <Avatar
                     id="userAvatar"
                     initials="DU"
