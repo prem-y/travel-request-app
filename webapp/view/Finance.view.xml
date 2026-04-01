@@ -1,0 +1,166 @@
+<mvc:View
+    controllerName="com.travel.request.travelrequest.controller.Finance"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:core="sap.ui.core">
+
+    <f:DynamicPage id="financePage" toggleHeaderOnTitleClick="false">
+
+        <!-- TITLE -->
+        <f:title>
+            <f:DynamicPageTitle id="financePageTitle">
+                <f:heading>
+                    <Title id="financeHeading" text="Approved Travel Requests" level="H2"/>
+                </f:heading>
+                <f:snappedHeading>
+                    <Title id="financeSnappedHeading" text="Approved Travel Requests" level="H3"/>
+                </f:snappedHeading>
+                <f:actions>
+                    <Button
+                        id="btnFinanceRefresh"
+                        icon="sap-icon://refresh"
+                        type="Transparent"
+                        tooltip="Refresh"
+                        press=".onRefresh"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <!-- FILTER BAR -->
+        <f:header>
+            <f:DynamicPageHeader id="financePageHeader" pinnable="true">
+                <VBox id="financeFilterBox">
+                    <HBox id="financeFilterRow" wrap="Wrap" alignItems="End">
+
+                        <!-- Date From -->
+                        <VBox id="fFilterFromBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblDateFrom" text="Date From" labelFor="dpDateFrom"/>
+                            <DatePicker
+                                id="dpDateFrom"
+                                valueFormat="yyyy-MM-dd"
+                                displayFormat="dd MMM yyyy"
+                                placeholder="Start date"
+                                change=".onFilterChange"
+                                width="170px"/>
+                        </VBox>
+
+                        <!-- Date To -->
+                        <VBox id="fFilterToBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblDateTo" text="Date To" labelFor="dpDateTo"/>
+                            <DatePicker
+                                id="dpDateTo"
+                                valueFormat="yyyy-MM-dd"
+                                displayFormat="dd MMM yyyy"
+                                placeholder="End date"
+                                change=".onFilterChange"
+                                width="170px"/>
+                        </VBox>
+
+                        <!-- Employee ID -->
+                        <VBox id="fFilterEmpBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblFEmpId" text="Employee ID" labelFor="fEmpIdInput"/>
+                            <Input
+                                id="fEmpIdInput"
+                                placeholder="e.g. EMP-00123"
+                                liveChange=".onFilterChange"
+                                width="170px"/>
+                        </VBox>
+
+                        <!-- Min Amount -->
+                        <VBox id="fFilterMinBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblMinAmt" text="Min Amount (₹)" labelFor="fMinAmount"/>
+                            <Input
+                                id="fMinAmount"
+                                placeholder="0"
+                                type="Number"
+                                liveChange=".onFilterChange"
+                                width="140px"/>
+                        </VBox>
+
+                        <!-- Max Amount -->
+                        <VBox id="fFilterMaxBox" class="sapUiSmallMarginEnd">
+                            <Label id="lblMaxAmt" text="Max Amount (₹)" labelFor="fMaxAmount"/>
+                            <Input
+                                id="fMaxAmount"
+                                placeholder="999999"
+                                type="Number"
+                                liveChange=".onFilterChange"
+                                width="140px"/>
+                        </VBox>
+
+                        <Button
+                            id="btnFinanceClear"
+                            text="Clear"
+                            type="Transparent"
+                            icon="sap-icon://clear-filter"
+                            press=".onClearFilters"
+                            class="sapUiSmallMarginTop"/>
+
+                    </HBox>
+
+                    <!-- Summary Strip -->
+                    <HBox id="summaryStrip" class="sapUiSmallMarginTop" alignItems="Center">
+                        <ObjectStatus id="totalCountStatus"  text="{uiModel>/totalText}"  state="None"    class="sapUiSmallMarginEnd"/>
+                        <ObjectStatus id="totalAmountStatus" text="{uiModel>/amountText}" state="Success" class="sapUiSmallMarginEnd"/>
+                    </HBox>
+
+                </VBox>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <!-- TABLE -->
+        <f:content>
+            <Table
+                id="financeTable"
+                items="{financeModel>/requests}"
+                busy="{uiModel>/busy}"
+                busyIndicatorDelay="0"
+                noDataText="No approved requests found."
+                growing="true"
+                growingThreshold="10"
+                growingScrollToLoad="true">
+
+                <headerToolbar>
+                    <OverflowToolbar id="financeToolbar">
+                        <Title id="financeTableTitle" text="{uiModel>/tableTitle}" level="H4"/>
+                        <ToolbarSpacer id="financeToolbarSpacer"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="fColReqId"    width="10%"><Text id="fHdrReqId"    text="Request ID"/></Column>
+                    <Column id="fColEmpId"    width="12%"><Text id="fHdrEmpId"    text="Employee ID"/></Column>
+                    <Column id="fColDest"     width="14%"><Text id="fHdrDest"     text="Destination"/></Column>
+                    <Column id="fColType"     width="11%"><Text id="fHdrType"     text="Travel Type"/></Column>
+                    <Column id="fColStart"    width="11%"><Text id="fHdrStart"    text="Start Date"/></Column>
+                    <Column id="fColEnd"      width="11%"><Text id="fHdrEnd"      text="End Date"/></Column>
+                    <Column id="fColAmount"   width="12%" hAlign="End"><Text id="fHdrAmount" text="Est. Amount (₹)"/></Column>
+                    <Column id="fColPurpose"  width="19%"><Text id="fHdrPurpose"  text="Purpose"/></Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem id="financeRow" type="Inactive">
+                        <cells>
+                            <Text id="fCellReqId"   text="{financeModel>requestId}"/>
+                            <Text id="fCellEmpId"   text="{financeModel>employeeId}"/>
+                            <Text id="fCellDest"    text="{financeModel>destination}"/>
+                            <Text id="fCellType"    text="{financeModel>travelType}"/>
+                            <Text id="fCellStart"   text="{financeModel>startDate}"/>
+                            <Text id="fCellEnd"     text="{financeModel>endDate}"/>
+                            <ObjectNumber
+                                id="fCellAmount"
+                                number="{financeModel>estimatedAmount}"
+                                unit="₹"
+                                state="Success"/>
+                            <Text id="fCellPurpose" text="{financeModel>purpose}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+
+            </Table>
+        </f:content>
+
+    </f:DynamicPage>
+
+</mvc:View>

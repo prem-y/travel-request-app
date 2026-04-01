@@ -12,7 +12,7 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Text"
 ], function (Controller, JSONModel, Filter, FilterOperator,
-             MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text) {
+    MessageBox, MessageToast, Dialog, Button, TextArea, VBox, Label, Text) {
     "use strict";
 
     return Controller.extend("com.travel.request.travelrequest.controller.Manager", {
@@ -35,75 +35,26 @@ sap.ui.define([
         _initModels: function () {
             this.getView().setModel(new JSONModel({ requests: [] }), "managerModel");
             this.getView().setModel(new JSONModel({
-                busy:          false,
-                tableTitle:    "Pending Requests (0)",
+                busy: false,
+                tableTitle: "Pending Requests (0)",
                 selectionText: "",
-                bulkEnabled:   false
+                bulkEnabled: false
             }), "uiModel");
         },
 
         // ── LOAD ───────────────────────────────────────────────────────────────
 
         _loadPendingRequests: function () {
-            var oUiModel     = this.getView().getModel("uiModel");
+            var oUiModel = this.getView().getModel("uiModel");
             var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
 
             oUiModel.setProperty("/busy", true);
 
             setTimeout(function () {
                 var aAll = oSharedModel.getProperty("/requests") || [];
-
-                // Only show Pending requests
                 var aPending = aAll.filter(function (r) {
                     return r.status === "Pending";
                 });
-
-                // Seed mock pending if none exist
-                if (aPending.length === 0) {
-                    var aMock = [
-                        {
-                            requestId:       "TR-0010",
-                            employeeId:      "EMP-00456",
-                            destination:     "Delhi",
-                            travelType:      "Domestic",
-                            startDate:       "05 Apr 2026",
-                            endDate:         "07 Apr 2026",
-                            estimatedAmount: "12,000",
-                            purpose:         "Government audit",
-                            status:          "Pending",
-                            statusState:     "Warning"
-                        },
-                        {
-                            requestId:       "TR-0011",
-                            employeeId:      "EMP-00789",
-                            destination:     "London",
-                            travelType:      "International",
-                            startDate:       "15 Apr 2026",
-                            endDate:         "20 Apr 2026",
-                            estimatedAmount: "1,20,000",
-                            purpose:         "Product launch event",
-                            status:          "Pending",
-                            statusState:     "Warning"
-                        },
-                        {
-                            requestId:       "TR-0012",
-                            employeeId:      "EMP-00321",
-                            destination:     "Hyderabad",
-                            travelType:      "Domestic",
-                            startDate:       "10 Apr 2026",
-                            endDate:         "11 Apr 2026",
-                            estimatedAmount: "6,500",
-                            purpose:         "Team offsite",
-                            status:          "Pending",
-                            statusState:     "Warning"
-                        }
-                    ];
-
-                    // Push mock into sharedModel too
-                    var aExisting = oSharedModel.getProperty("/requests") || [];
-                    oSharedModel.setProperty("/requests", aExisting.concat(aMock));
-                    aPending = aMock;
-                }
 
                 this.getView().getModel("managerModel").setProperty("/requests", aPending);
                 oUiModel.setProperty("/busy", false);
@@ -115,7 +66,7 @@ sap.ui.define([
         // ── FILTERS ────────────────────────────────────────────────────────────
 
         onFilterChange: function () { this._applyFilters(); },
-        onSearch:       function () { this._applyFilters(); },
+        onSearch: function () { this._applyFilters(); },
 
         onClearFilters: function () {
             this.byId("mFilterType").setSelectedKey("");
@@ -124,10 +75,10 @@ sap.ui.define([
         },
 
         _applyFilters: function () {
-            var oBinding    = this.byId("pendingTable").getBinding("items");
-            var aFilters    = [];
+            var oBinding = this.byId("pendingTable").getBinding("items");
+            var aFilters = [];
             var sTravelType = this.byId("mFilterType").getSelectedKey();
-            var sSearch     = this.byId("mSearchField").getValue();
+            var sSearch = this.byId("mSearchField").getValue();
 
             if (sTravelType) {
                 aFilters.push(new Filter("travelType", FilterOperator.EQ, sTravelType));
@@ -136,8 +87,8 @@ sap.ui.define([
                 aFilters.push(new Filter({
                     filters: [
                         new Filter("destination", FilterOperator.Contains, sSearch),
-                        new Filter("employeeId",  FilterOperator.Contains, sSearch),
-                        new Filter("requestId",   FilterOperator.Contains, sSearch)
+                        new Filter("employeeId", FilterOperator.Contains, sSearch),
+                        new Filter("requestId", FilterOperator.Contains, sSearch)
                     ],
                     and: false
                 }));
@@ -151,10 +102,10 @@ sap.ui.define([
 
         onSelectionChange: function () {
             var aSelected = this.byId("pendingTable").getSelectedItems();
-            var iCount    = aSelected.length;
-            var oUiModel  = this.getView().getModel("uiModel");
+            var iCount = aSelected.length;
+            var oUiModel = this.getView().getModel("uiModel");
 
-            oUiModel.setProperty("/bulkEnabled",   iCount > 0);
+            oUiModel.setProperty("/bulkEnabled", iCount > 0);
             oUiModel.setProperty("/selectionText", iCount > 0 ? iCount + " selected" : "");
         },
 
@@ -193,9 +144,9 @@ sap.ui.define([
         // ── REMARKS DIALOG ─────────────────────────────────────────────────────
 
         _openRemarksDialog: function (sAction, aItems) {
-            var that       = this;
-            var sColor     = sAction === "Approve" ? "Accept" : "Reject";
-            var sIds       = aItems.map(function (i) { return i.requestId; }).join(", ");
+            var that = this;
+            var sColor = sAction === "Approve" ? "Accept" : "Reject";
+            var sIds = aItems.map(function (i) { return i.requestId; }).join(", ");
 
             // Destroy previous dialog if exists
             if (this._oRemarksDialog) {
@@ -209,10 +160,10 @@ sap.ui.define([
             });
 
             this._oRemarksDialog = new Dialog({
-                id:             "remarksDialog",
-                title:          sAction + " Request(s)",
-                type:           "Message",
-                state:          sAction === "Approve" ? "Success" : "Error",
+                id: "remarksDialog",
+                title: sAction + " Request(s)",
+                type: "Message",
+                state: sAction === "Approve" ? "Success" : "Error",
                 content: [
                     new VBox({
                         items: [
@@ -224,16 +175,16 @@ sap.ui.define([
                     })
                 ],
                 beginButton: new Button({
-                    text:    sAction,
-                    type:    sColor,
-                    press:   function () {
+                    text: sAction,
+                    type: sColor,
+                    press: function () {
                         var sRemarks = oTextArea.getValue();
                         that._processAction(sAction, aItems, sRemarks);
                         that._oRemarksDialog.close();
                     }
                 }),
                 endButton: new Button({
-                    text:  "Cancel",
+                    text: "Cancel",
                     press: function () { that._oRemarksDialog.close(); }
                 }),
                 afterClose: function () {
@@ -249,14 +200,14 @@ sap.ui.define([
         // ── PROCESS ACTION ─────────────────────────────────────────────────────
 
         _processAction: function (sAction, aItems, sRemarks) {
-            var oUiModel     = this.getView().getModel("uiModel");
+            var oUiModel = this.getView().getModel("uiModel");
             var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
             var oManagerModel = this.getView().getModel("managerModel");
 
             oUiModel.setProperty("/busy", true);
 
-            var sNewStatus      = sAction === "Approve" ? "Approved" : "Rejected";
-            var sNewStatusState = sAction === "Approve" ? "Success"  : "Error";
+            var sNewStatus = sAction === "Approve" ? "Approved" : "Rejected";
+            var sNewStatusState = sAction === "Approve" ? "Success" : "Error";
 
             setTimeout(function () {
 
@@ -276,9 +227,9 @@ sap.ui.define([
                         return r.requestId === oItem.requestId;
                     });
                     if (iIdx > -1) {
-                        aShared[iIdx].status      = sNewStatus;
+                        aShared[iIdx].status = sNewStatus;
                         aShared[iIdx].statusState = sNewStatusState;
-                        aShared[iIdx].remarks     = sRemarks;
+                        aShared[iIdx].remarks = sRemarks;
                     }
                 });
                 oSharedModel.setProperty("/requests", aShared);
@@ -289,8 +240,8 @@ sap.ui.define([
                 });
                 oManagerModel.setProperty("/requests", aRemaining);
 
-                oUiModel.setProperty("/busy",          false);
-                oUiModel.setProperty("/bulkEnabled",   false);
+                oUiModel.setProperty("/busy", false);
+                oUiModel.setProperty("/bulkEnabled", false);
                 oUiModel.setProperty("/selectionText", "");
                 this._updateTitle(aRemaining.length);
 
@@ -306,8 +257,8 @@ sap.ui.define([
         onViewDetails: function (oEvent) {
             var oItem = oEvent.getSource().getBindingContext("managerModel").getObject();
             MessageBox.information(
-                "Employee:    " + oItem.employeeId   + "\n" +
-                "Destination: " + oItem.destination  + "\n" +
+                "Employee:    " + oItem.employeeId + "\n" +
+                "Destination: " + oItem.destination + "\n" +
                 "Dates:       " + oItem.startDate + " - " + oItem.endDate + "\n" +
                 "Amount:      ₹" + oItem.estimatedAmount + "\n" +
                 "Purpose:     " + oItem.purpose,

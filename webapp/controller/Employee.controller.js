@@ -47,54 +47,15 @@ sap.ui.define([
             oUiModel.setProperty("/busy", true);
 
             setTimeout(function () {
-                var aRequests = oSharedModel.getProperty("/requests");
+                var aRequests = oSharedModel.getProperty("/requests") || [];
+                // Show only this employee's requests
+                var aMyRequests = aRequests.filter(function (r) {
+                    return r.employeeId === "EMP-00123";
+                });
 
-                // Seed mock data only on first load
-                if (aRequests.length === 0) {
-                    aRequests = [
-                        {
-                            requestId: "TR-0001",
-                            destination: "Mumbai",
-                            travelType: "Domestic",
-                            startDate: "2026-04-01",
-                            endDate: "2026-04-03",
-                            estimatedAmount: "8500",
-                            purpose: "Client meeting",
-                            status: "Approved",
-                            statusState: "Success"
-                        },
-                        {
-                            requestId: "TR-0002",
-                            destination: "Singapore",
-                            travelType: "International",
-                            startDate: "2026-04-10",
-                            endDate: "2026-04-14",
-                            estimatedAmount: "75000",
-                            purpose: "Tech conference",
-                            status: "Pending",
-                            statusState: "Warning"
-                        },
-                        {
-                            requestId: "TR-0003",
-                            destination: "Bangalore",
-                            travelType: "Domestic",
-                            startDate: "2026-04-20",
-                            endDate: "2026-04-21",
-                            estimatedAmount: "4200",
-                            purpose: "Internal training",
-                            status: "Draft",
-                            statusState: "None"
-                        }
-                    ];
-                    oSharedModel.setProperty("/requests", aRequests);
-                }
-
-                // Bind sharedModel requests into local list model
-                var oRequestListModel = this.getView().getModel("requestListModel");
-                oRequestListModel.setProperty("/requests", aRequests);
-
+                this.getView().getModel("requestListModel").setProperty("/requests", aMyRequests);
                 oUiModel.setProperty("/busy", false);
-                this._updateTableTitle(aRequests.length);
+                this._updateTableTitle(aMyRequests.length);
 
             }.bind(this), 400);
         },
