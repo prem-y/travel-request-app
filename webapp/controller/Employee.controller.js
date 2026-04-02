@@ -45,22 +45,38 @@ sap.ui.define([
 
         _loadRequests: function () {
             var oUiModel = this.getView().getModel("uiModel");
-            var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
+            var oODataModel = this.getOwnerComponent().getModel();
             var sEmpId = this.getOwnerComponent().getModel("session").getProperty("/employeeId");
 
             Utils.setBusy(this.getView(), true);
 
-            setTimeout(function () {
-                var aAll = oSharedModel.getProperty("/requests") || [];
-                var aMyRequests = aAll.filter(function (r) {
-                    return r.employeeId === sEmpId;
-                });
-
-                this.getView().getModel("requestListModel").setProperty("/requests", aMyRequests);
-                Utils.setBusy(this.getView(), false);
-                this._updateTableTitle(aMyRequests.length);
-
-            }.bind(this), 400);
+            oODataModel.read("/TravelRequests", {
+                filters: [
+                    new Filter("EmployeeId", FilterOperator.EQ, sEmpId)
+                ],
+                success: function (oData) {
+                    // Map OData PascalCase to camelCase for view bindings
+                    var aMapped = oData.results.map(function (r) {
+                        return {
+                            requestId: r.RequestId,
+                            employeeId: r.EmployeeId,
+                            destination: r.Destination,
+                            travelType: r.TravelType,
+                            startDate: r.StartDate,
+                            endDate: r.EndDate,
+                            estimatedAmount: r.EstimatedAmount,
+                            purpose: r.Purpose,
+                            status: r.Status
+                        };
+                    });
+                    this.getView().getModel("requestListModel").setProperty("/requests", aMapped);
+                    Utils.setBusy(this.getView(), false);
+                    this._updateTableTitle(aMapped.length);
+                }.bind(this),
+                error: function (oError) {
+                    Utils.handleError(oError, this.getView());
+                }.bind(this)
+            });
         },
 
         // ── FILTERS ────────────────────────────────────────────────────────────

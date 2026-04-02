@@ -7,9 +7,17 @@ sap.ui.define([
     return Controller.extend("com.travel.request.travelrequest.controller.Dashboard", {
 
         onInit: function () {
-            this.getOwnerComponent().getRouter()
-                .getRoute("dashboard")
-                .attachPatternMatched(this._onRouteMatched, this);
+            var oRouter = this.getOwnerComponent().getRouter();
+            oRouter.getRoute("dashboard").attachPatternMatched(this._onRouteMatched, this);
+
+            // Refresh KPIs whenever sharedModel data changes
+            this.getOwnerComponent().getModel("sharedModel").attachPropertyChange(function () {
+                this._refreshKPIs();
+            }.bind(this));
+        },
+
+        _onRouteMatched: function () {
+            this._refreshKPIs();
         },
 
         _onRouteMatched: function () {
@@ -18,11 +26,11 @@ sap.ui.define([
 
         _refreshKPIs: function () {
             var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
-            var aRequests    = oSharedModel.getProperty("/requests") || [];
+            var aRequests = oSharedModel.getProperty("/requests") || [];
 
             var oKpi = {
-                total:    aRequests.length,
-                pending:  aRequests.filter(function (r) { return r.status === "Pending";  }).length,
+                total: aRequests.length,
+                pending: aRequests.filter(function (r) { return r.status === "Pending"; }).length,
                 approved: aRequests.filter(function (r) { return r.status === "Approved"; }).length,
                 rejected: aRequests.filter(function (r) { return r.status === "Rejected"; }).length
             };

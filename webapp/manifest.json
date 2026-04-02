@@ -3,7 +3,13 @@
   "sap.app": {
     "id": "com.travel.request.travelrequest",
     "type": "application",
-    "i18n": "i18n/i18n.properties",
+    "i18n": {
+      "bundleName": "com.travel.request.travelrequest.i18n.i18n",
+      "supportedLocales": [
+        ""
+      ],
+      "fallbackLocale": ""
+    },
     "applicationVersion": {
       "version": "0.0.1"
     },
@@ -51,7 +57,11 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "com.travel.request.travelrequest.i18n.i18n"
+          "bundleName": "com.travel.request.travelrequest.i18n.i18n",
+          "supportedLocales": [
+            ""
+          ],
+          "fallbackLocale": ""
         }
       }
     },

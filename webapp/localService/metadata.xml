@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+    <edmx:DataServices m:DataServiceVersion="2.0"
+        xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+        <Schema Namespace="TravelRequestService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+
+            <EntityType Name="TravelRequest">
+                <Key><PropertyRef Name="RequestId"/></Key>
+                <Property Name="RequestId"       Type="Edm.String"  Nullable="false" MaxLength="20"/>
+                <Property Name="EmployeeId"      Type="Edm.String"  Nullable="false" MaxLength="20"/>
+                <Property Name="TravelType"      Type="Edm.String"  MaxLength="20"/>
+                <Property Name="StartDate"       Type="Edm.String"  MaxLength="20"/>
+                <Property Name="EndDate"         Type="Edm.String"  MaxLength="20"/>
+                <Property Name="Destination"     Type="Edm.String"  MaxLength="100"/>
+                <Property Name="EstimatedAmount" Type="Edm.Decimal" Precision="13" Scale="2"/>
+                <Property Name="Purpose"         Type="Edm.String"  MaxLength="500"/>
+                <Property Name="Status"          Type="Edm.String"  MaxLength="20"/>
+                <Property Name="Remarks"         Type="Edm.String"  MaxLength="500"/>
+            </EntityType>
+
+            <EntityContainer Name="TravelRequestContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="TravelRequests" EntityType="TravelRequestService.TravelRequest"/>
+            </EntityContainer>
+
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

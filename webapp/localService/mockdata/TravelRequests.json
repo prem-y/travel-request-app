@@ -1,0 +1,110 @@
+[
+    {
+        "RequestId":       "TR-0001",
+        "EmployeeId":      "EMP-00123",
+        "TravelType":      "Domestic",
+        "StartDate":       "2026-04-01",
+        "EndDate":         "2026-04-03",
+        "Destination":     "Mumbai",
+        "EstimatedAmount": 8500,
+        "Purpose":         "Client meeting",
+        "Status":          "Approved",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0002",
+        "EmployeeId":      "EMP-00123",
+        "TravelType":      "International",
+        "StartDate":       "2026-04-10",
+        "EndDate":         "2026-04-14",
+        "Destination":     "Singapore",
+        "EstimatedAmount": 75000,
+        "Purpose":         "Tech conference",
+        "Status":          "Pending",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0003",
+        "EmployeeId":      "EMP-00123",
+        "TravelType":      "Domestic",
+        "StartDate":       "2026-04-20",
+        "EndDate":         "2026-04-21",
+        "Destination":     "Bangalore",
+        "EstimatedAmount": 4200,
+        "Purpose":         "Internal training",
+        "Status":          "Draft",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0004",
+        "EmployeeId":      "EMP-00123",
+        "TravelType":      "International",
+        "StartDate":       "2026-03-05",
+        "EndDate":         "2026-03-08",
+        "Destination":     "Dubai",
+        "EstimatedAmount": 55000,
+        "Purpose":         "Partner negotiation",
+        "Status":          "Rejected",
+        "Remarks":         "Budget exceeded"
+    },
+    {
+        "RequestId":       "TR-0010",
+        "EmployeeId":      "EMP-00456",
+        "TravelType":      "Domestic",
+        "StartDate":       "2026-04-05",
+        "EndDate":         "2026-04-07",
+        "Destination":     "Delhi",
+        "EstimatedAmount": 12000,
+        "Purpose":         "Government audit",
+        "Status":          "Pending",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0011",
+        "EmployeeId":      "EMP-00789",
+        "TravelType":      "International",
+        "StartDate":       "2026-04-15",
+        "EndDate":         "2026-04-20",
+        "Destination":     "London",
+        "EstimatedAmount": 120000,
+        "Purpose":         "Product launch event",
+        "Status":          "Pending",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0020",
+        "EmployeeId":      "EMP-00111",
+        "TravelType":      "Domestic",
+        "StartDate":       "2026-03-10",
+        "EndDate":         "2026-03-12",
+        "Destination":     "Chennai",
+        "EstimatedAmount": 9500,
+        "Purpose":         "Client delivery",
+        "Status":          "Approved",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0021",
+        "EmployeeId":      "EMP-00222",
+        "TravelType":      "International",
+        "StartDate":       "2026-03-15",
+        "EndDate":         "2026-03-20",
+        "Destination":     "New York",
+        "EstimatedAmount": 145000,
+        "Purpose":         "Annual conference",
+        "Status":          "Approved",
+        "Remarks":         ""
+    },
+    {
+        "RequestId":       "TR-0022",
+        "EmployeeId":      "EMP-00333",
+        "TravelType":      "Domestic",
+        "StartDate":       "2026-03-22",
+        "EndDate":         "2026-03-23",
+        "Destination":     "Pune",
+        "EstimatedAmount": 4200,
+        "Purpose":         "Sprint planning",
+        "Status":          "Approved",
+        "Remarks":         ""
+    }
+]

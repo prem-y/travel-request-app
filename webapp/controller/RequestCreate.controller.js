@@ -154,104 +154,89 @@ sap.ui.define([
 
         _submitToOData: function (oData, sStatus) {
             var oUiModel = this.getView().getModel("uiModel");
+            var oODataModel = this.getOwnerComponent().getModel();
+            var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
+            var aRequests = oSharedModel.getProperty("/requests");
 
-            // Show busy indicator
             oUiModel.setProperty("/busy", true);
             oUiModel.setProperty("/submitEnabled", false);
 
-            // Simulate OData Create call (replace with real v2/v4 call)
-            setTimeout(function () {
-                try {
-                    // ── Real OData v2 call would look like: ──────────────────
-                    // var oODataModel = this.getOwnerComponent().getModel();
-                    // oODataModel.create("/TravelRequests", {
-                    //     EmployeeId:      oData.employeeId,
-                    //     TravelType:      oData.travelType,
-                    //     StartDate:       oData.startDate,
-                    //     EndDate:         oData.endDate,
-                    //     Destination:     oData.destination,
-                    //     EstimatedAmount: parseFloat(oData.estimatedAmount),
-                    //     Purpose:         oData.purpose,
-                    //     Status:          sStatus
-                    // }, {
-                    //     success: function(oResult) { ... },
-                    //     error:   function(oError)  { ... }
-                    // });
-                    // ────────────────────────────────────────────────────────
+            var oPayload = {
+                RequestId: this._sEditRequestId || Utils.generateRequestId(aRequests),
+                EmployeeId: oData.employeeId,
+                TravelType: oData.travelType,
+                StartDate: oData.startDate,
+                EndDate: oData.endDate,
+                Destination: oData.destination,
+                EstimatedAmount: parseFloat((oData.estimatedAmount + "").replace(/,/g, "")) || 0,
+                Purpose: oData.purpose,
+                Status: sStatus,
+                Remarks: ""
+            };
 
-                    // Mock success
-                    oUiModel.setProperty("/busy", false);
-                    oUiModel.setProperty("/submitEnabled", true);
+            var fnSuccess = function (oResult) {
+                oUiModel.setProperty("/busy", false);
+                oUiModel.setProperty("/submitEnabled", true);
 
-                    // Push to shared model
-                    var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
-                    var aRequests = oSharedModel.getProperty("/requests");
+                // Map result back to camelCase
+                var oMapped = {
+                    requestId: oResult.RequestId,
+                    employeeId: oResult.EmployeeId,
+                    destination: oResult.Destination,
+                    travelType: oResult.TravelType,
+                    startDate: oResult.StartDate,
+                    endDate: oResult.EndDate,
+                    estimatedAmount: String(oResult.EstimatedAmount),
+                    purpose: oResult.Purpose,
+                    status: oResult.Status,
+                    remarks: oResult.Remarks || ""
+                };
 
-                    if (this._sEditRequestId) {
-                        // UPDATE existing request
-                        var iIndex = aRequests.findIndex(function (r) {
-                            return r.requestId === this._sEditRequestId;
-                        }.bind(this));
-
-                        if (iIndex > -1) {
-                            aRequests[iIndex] = {
-                                requestId: this._sEditRequestId,
-                                employeeId: oData.employeeId,   // ADD THIS
-                                destination: oData.destination,
-                                travelType: oData.travelType,
-                                startDate: oData.startDate,
-                                endDate: oData.endDate,
-                                estimatedAmount: oData.estimatedAmount,
-                                purpose: oData.purpose,
-                                status: sStatus,
-                                statusState: sStatus === "Pending" ? "Warning"
-                                    : sStatus === "Draft" ? "None"
-                                        : "Success"
-                            };
-                            oSharedModel.setProperty("/requests", aRequests);
-                        }
-                        this._sEditRequestId = null;
-
-                    } else {
-                        // CREATE new request
-                        var oNewRequest = {
-                            requestId: Utils.generateRequestId(aRequests),
-                            employeeId: oData.employeeId,   // ADD THIS
-                            destination: oData.destination,
-                            travelType: oData.travelType,
-                            startDate: oData.startDate,
-                            endDate: oData.endDate,
-                            estimatedAmount: oData.estimatedAmount,
-                            purpose: oData.purpose,
-                            status: sStatus,
-                            statusState: sStatus === "Pending" ? "Warning"
-                                : sStatus === "Draft" ? "None"
-                                    : "Success"
-                        };
-                        aRequests.push(oNewRequest);
-                        oSharedModel.setProperty("/requests", aRequests);
-
-                        // Track this requestId so subsequent saves update the same entry
-                        this._sEditRequestId = oNewRequest.requestId;
-                    }
-
-                    if (sStatus === "Draft") {
-                        // Do NOT reset _sEditRequestId here — keep tracking for further edits
-                        MessageToast.show("Request saved as Draft successfully.");
-                    } else {
-                        // Reset on final submit
-                        this._sEditRequestId = null;
-                        MessageBox.success("Travel request submitted successfully!", {
-                            onClose: function () {
-                                this.getOwnerComponent().getRouter().navTo("employee");
-                            }.bind(this)
-                        });
-                    }
-
-                } catch (oError) {
-                    this._handleODataError(oError);
+                // Update sharedModel
+                var aExisting = oSharedModel.getProperty("/requests");
+                var iIdx = aExisting.findIndex(function (r) {
+                    return r.requestId === oMapped.requestId;
+                });
+                if (iIdx > -1) {
+                    aExisting[iIdx] = oMapped;   // update existing
+                } else {
+                    aExisting.push(oMapped);     // add new
                 }
-            }.bind(this), 1500); // Simulated network delay
+                oSharedModel.setProperty("/requests", aExisting);
+
+                // Track for further draft saves
+                this._sEditRequestId = oMapped.requestId;
+
+                if (sStatus === "Draft") {
+                    MessageToast.show("Request saved as Draft successfully.");
+                } else {
+                    this._sEditRequestId = null;
+                    MessageBox.success("Travel request submitted successfully!", {
+                        onClose: function () {
+                            this.getOwnerComponent().getRouter().navTo("employee");
+                        }.bind(this)
+                    });
+                }
+            }.bind(this);
+
+            var fnError = function (oError) {
+                Utils.handleError(oError, this.getView());
+            }.bind(this);
+
+            if (this._sEditRequestId) {
+                // UPDATE existing via OData
+                oODataModel.update(
+                    "/TravelRequests('" + this._sEditRequestId + "')",
+                    oPayload,
+                    { success: fnSuccess, error: fnError }
+                );
+            } else {
+                // CREATE new via OData
+                oODataModel.create("/TravelRequests", oPayload, {
+                    success: fnSuccess,
+                    error: fnError
+                });
+            }
         },
 
         // ── ERROR HANDLING ─────────────────────────────────────────────────────

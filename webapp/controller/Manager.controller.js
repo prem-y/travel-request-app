@@ -192,55 +192,65 @@ sap.ui.define([
 
         _processAction: function (sAction, aItems, sRemarks) {
             var oUiModel = this.getView().getModel("uiModel");
+            var oODataModel = this.getOwnerComponent().getModel();
             var oSharedModel = this.getOwnerComponent().getModel("sharedModel");
             var oManagerModel = this.getView().getModel("managerModel");
-
-            oUiModel.setProperty("/busy", true);
-
             var sNewStatus = sAction === "Approve" ? "Approved" : "Rejected";
-            var sNewStatusState = sAction === "Approve" ? "Success" : "Error";
 
-            setTimeout(function () {
+            Utils.setBusy(this.getView(), true);
 
-                // ── Real OData update would be: ──────────────────────────────
-                // aItems.forEach(function(oItem) {
-                //     oODataModel.update("/TravelRequests('" + oItem.requestId + "')", {
-                //         Status:  sNewStatus,
-                //         Remarks: sRemarks
-                //     }, { success: ..., error: ... });
-                // });
-                // ────────────────────────────────────────────────────────────
+            var iTotal = aItems.length;
+            var iCompleted = 0;
 
-                // Update sharedModel
-                var aShared = oSharedModel.getProperty("/requests");
-                aItems.forEach(function (oItem) {
-                    var iIdx = aShared.findIndex(function (r) {
-                        return r.requestId === oItem.requestId;
-                    });
-                    if (iIdx > -1) {
-                        aShared[iIdx].status = sNewStatus;
-                        aShared[iIdx].statusState = sNewStatusState;
-                        aShared[iIdx].remarks = sRemarks;
+            aItems.forEach(function (oItem) {
+                oODataModel.update(
+                    "/TravelRequests('" + oItem.requestId + "')",
+                    {
+                        RequestId: oItem.requestId,
+                        EmployeeId: oItem.employeeId,
+                        TravelType: oItem.travelType,
+                        StartDate: oItem.startDate,
+                        EndDate: oItem.endDate,
+                        Destination: oItem.destination,
+                        EstimatedAmount: parseFloat((oItem.estimatedAmount + "").replace(/,/g, "")) || 0,
+                        Purpose: oItem.purpose,
+                        Status: sNewStatus,
+                        Remarks: sRemarks
+                    },
+                    {
+                        success: function () {
+                            iCompleted++;
+
+                            // Update sharedModel
+                            var aShared = oSharedModel.getProperty("/requests");
+                            var iIdx = aShared.findIndex(function (r) {
+                                return r.requestId === oItem.requestId;
+                            });
+                            if (iIdx > -1) {
+                                aShared[iIdx].status = sNewStatus;
+                                aShared[iIdx].remarks = sRemarks;
+                                oSharedModel.setProperty("/requests", aShared);
+                            }
+
+                            if (iCompleted === iTotal) {
+                                // Remove processed from manager table
+                                var aRemaining = oManagerModel.getProperty("/requests").filter(function (r) {
+                                    return !aItems.find(function (i) { return i.requestId === r.requestId; });
+                                });
+                                oManagerModel.setProperty("/requests", aRemaining);
+                                Utils.setBusy(this.getView(), false);
+                                this.getView().getModel("uiModel").setProperty("/bulkEnabled", false);
+                                this.getView().getModel("uiModel").setProperty("/selectionText", "");
+                                this._updateTitle(aRemaining.length);
+                                MessageToast.show(iTotal + " request(s) " + sNewStatus.toLowerCase() + " successfully.");
+                            }
+                        }.bind(this),
+                        error: function (oError) {
+                            Utils.handleError(oError, this.getView());
+                        }.bind(this)
                     }
-                });
-                oSharedModel.setProperty("/requests", aShared);
-
-                // Remove processed items from manager table
-                var aRemaining = oManagerModel.getProperty("/requests").filter(function (r) {
-                    return !aItems.find(function (i) { return i.requestId === r.requestId; });
-                });
-                oManagerModel.setProperty("/requests", aRemaining);
-
-                oUiModel.setProperty("/busy", false);
-                oUiModel.setProperty("/bulkEnabled", false);
-                oUiModel.setProperty("/selectionText", "");
-                this._updateTitle(aRemaining.length);
-
-                MessageToast.show(
-                    aItems.length + " request(s) " + sNewStatus.toLowerCase() + " successfully."
                 );
-
-            }.bind(this), 800);
+            }.bind(this));
         },
 
         // ── VIEW DETAILS ───────────────────────────────────────────────────────
