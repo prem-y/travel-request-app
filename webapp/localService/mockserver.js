@@ -5,20 +5,20 @@ sap.ui.define([
 
     return {
         init: function () {
-            var sBaseUrl     = sap.ui.require.toUrl("com/travel/request/travelrequest");
-            var sServiceUrl  = sBaseUrl + "/localService/";
+            var sBaseUrl = sap.ui.require.toUrl("com/travel/request/travelrequest");
+            var sServiceUrl = sBaseUrl + "/localService/";
             var sMetadataUrl = sBaseUrl + "/localService/metadata.xml";
             var sMockdataUrl = sBaseUrl + "/localService/mockdata";
 
-            var oMockServer  = new MockServer({ rootUri: sServiceUrl });
+            var oMockServer = new MockServer({ rootUri: sServiceUrl });
 
             MockServer.config({
-                autoRespond:      true,
+                autoRespond: true,
                 autoRespondAfter: 300
             });
 
             oMockServer.simulate(sMetadataUrl, {
-                sMockdataBaseUrl:        sMockdataUrl,
+                sMockdataBaseUrl: sMockdataUrl,
                 bGenerateMissingMockData: true
             });
 

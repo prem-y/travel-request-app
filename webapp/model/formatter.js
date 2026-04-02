@@ -8,9 +8,9 @@ sap.ui.define([], function () {
         statusState: function (sStatus) {
             var mStates = {
                 "Approved": "Success",
-                "Pending":  "Warning",
+                "Pending": "Warning",
                 "Rejected": "Error",
-                "Draft":    "None"
+                "Draft": "None"
             };
             return mStates[sStatus] || "None";
         },
@@ -19,9 +19,9 @@ sap.ui.define([], function () {
         statusText: function (sStatus) {
             var mTexts = {
                 "Approved": "Approved",
-                "Pending":  "Pending Approval",
+                "Pending": "Pending Approval",
                 "Rejected": "Rejected",
-                "Draft":    "Draft"
+                "Draft": "Draft"
             };
             return mTexts[sStatus] || sStatus;
         },

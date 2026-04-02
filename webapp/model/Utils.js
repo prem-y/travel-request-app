@@ -11,7 +11,7 @@ sap.ui.define([
         handleError: function (oError, oView) {
             var oUiModel = oView && oView.getModel("uiModel");
             if (oUiModel) {
-                oUiModel.setProperty("/busy",          false);
+                oUiModel.setProperty("/busy", false);
                 oUiModel.setProperty("/submitEnabled", true);
             }
 
@@ -21,9 +21,9 @@ sap.ui.define([
             if (oError && oError.responseText) {
                 try {
                     var oBody = JSON.parse(oError.responseText);
-                    sMessage  = oBody.error && oBody.error.message
-                              ? oBody.error.message.value || oBody.error.message
-                              : sMessage;
+                    sMessage = oBody.error && oBody.error.message
+                        ? oBody.error.message.value || oBody.error.message
+                        : sMessage;
                 } catch (e) {
                     sMessage = oError.responseText;
                 }
@@ -32,7 +32,7 @@ sap.ui.define([
             }
 
             MessageBox.error(sMessage, {
-                title:   "Error",
+                title: "Error",
                 details: oError ? JSON.stringify(oError, null, 2) : ""
             });
         },
@@ -41,7 +41,7 @@ sap.ui.define([
         // Call: Utils.updateTableTitle(oView, "uiModel", "/tableTitle", "My Requests", iCount)
         updateTableTitle: function (oView, sModelName, sPath, sLabel, iCount) {
             oView.getModel(sModelName)
-                 .setProperty(sPath, sLabel + " (" + iCount + ")");
+                .setProperty(sPath, sLabel + " (" + iCount + ")");
         },
 
         // Show busy on a view's uiModel
